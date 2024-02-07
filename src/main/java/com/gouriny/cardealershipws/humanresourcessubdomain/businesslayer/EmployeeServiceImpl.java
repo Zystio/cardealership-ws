@@ -33,10 +33,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Employee> employees = employeeRepository.findAll();
         List<EmployeeResponseModel> employeeResponseModels = new ArrayList<>();
         for (Employee employee : employees) {
-            EmployeeResponseModel EmployeeResponseModel = new EmployeeResponseModel();
-            BeanUtils.copyProperties(employee, EmployeeResponseModel);
-            EmployeeResponseModel.setEmployeeId(employee.getEmployeeIdentifier().getEmployeeId());
-            employeeResponseModels.add(EmployeeResponseModel);
+            EmployeeResponseModel employeeResponseModel = new EmployeeResponseModel();
+            BeanUtils.copyProperties(employee, employeeResponseModel);
+            employeeResponseModel.setEmployeeId(employee.getEmployeeIdentifier().getEmployeeId());
+            employeeResponseModels.add(employeeResponseModel);
         }
         return employeeResponseModels;
 
