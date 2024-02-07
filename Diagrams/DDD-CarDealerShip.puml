@@ -1,0 +1,280 @@
+@startuml
+hide circle
+top to bottom direction
+
+!define ENTITY(entityName) class entityName << Entity >>
+!define AGGREGATE(aggregateName) class aggregateName << Aggregate >>
+!define AGGREGATE_ROOT(aggregateRootName) class aggregateRootName << Aggregate Root >>
+!define AGGREGATE_ROOT_ENTITY(aggregateRootEntityName) class aggregateRootEntityName << Aggregate Root >> << Entity >>
+!define VALUE_OBJECT(valueObjectName) class valueObjectName << Value Object >>
+!pragma useVerticalIf on
+skinparam dpi 350
+skinparam packageStyle rectangle
+skinparam rectangle {
+    BackgroundColor #f7f4eb
+    BorderColor Black
+}
+
+rectangle "Car Dealership" as BoundedContextCarDealership #line.dashed {
+
+ Package "Inventory Management Sub-Domain" <<Rectangle>> #Lavender {
+
+        ENTITY(Vehicle) #lightblue {
+            make: String
+            model: String
+            year: Integer
+            status: String
+            type: String
+        }
+
+        VALUE_OBJECT(VehicleIdentifier) #Bisque{
+           vin: String
+        }
+
+        VALUE_OBJECT(MSRP) #Bisque{
+           value: Decimal
+           currency: Currency
+        }
+
+        VALUE_OBJECT(Options) #Bisque{
+           name: String
+           description: String
+           price: Price
+        }
+
+        VALUE_OBJECT(Manufacturer) #Bisque{
+            name: String
+            country: String
+        }
+
+        AGGREGATE_ROOT(Inventory) #Cyan {
+            type: String
+        }
+
+       VALUE_OBJECT(InventoryIdentifier) #Bisque{
+            inventoryId: UUID
+       }
+
+       Inventory --> InventoryIdentifier
+       Inventory *-- "0..*" VehicleIdentifier
+       note on link
+          where vehicle.status != SOLD
+       end note
+
+       Vehicle --> VehicleIdentifier
+       Vehicle o-- "1" MSRP
+       Vehicle o-- "0..*" Options
+       Vehicle o-- "1" Manufacturer
+
+    }
+
+
+Package "Human Resources Sub-Domain" <<Rectangle>> #3399FF{
+        ENTITY(Employee) #lightblue{
+            firstName: String
+            lastName: String
+            email: String
+            salary: Decimal
+            commissionRate: Decimal
+        }
+        VALUE_OBJECT(EmployeeIdentifier) #Bisque{
+            salesPersonId: UUID
+        }
+        VALUE_OBJECT(EmployeeAddress) #Bisque{
+                street: String
+                city: String
+                province: String
+                country: String
+        }
+        VALUE_OBJECT(EmployeePhoneNumber) #Bisque {
+            type: String
+            number: String
+        }
+
+        ENTITY(Department) #lightblue {
+            departmentName: String
+            headCount: Integer
+        }
+
+        VALUE_OBJECT(DepartmentIdentifier) #Bisque {
+            departmentCode: UUID
+        }
+
+        VALUE_OBJECT(Position) #Bisque {
+            title: String
+            positionCode: String
+        }
+
+
+
+        Employee --> EmployeeIdentifier
+
+        Employee o--> Position
+        Employee "1" o--> "1..*" EmployeePhoneNumber
+        Employee o--> "1" EmployeeAddress
+        Employee "1" o--> "1" DepartmentIdentifier
+        Department --> DepartmentIdentifier
+        Department "1" o--> "1..*" Position
+    }
+
+
+    Package "Customer Relationship Management Sub-Domain" <<Rectangle>> #FFCDD2{
+        AGGREGATE_ROOT_ENTITY(Customer) #lightpink{
+            firstName: String
+            lastName: String
+            email: String
+            contactMethodPreference: String
+        }
+        VALUE_OBJECT(CustomerIdentifier) #Bisque{
+            customerId: UUID
+        }
+        VALUE_OBJECT(CustomerAddress) #Bisque{
+                street: String
+                city: String
+                province: String
+                country: String
+        }
+
+        VALUE_OBJECT(CustomerPhoneNumber) #Bisque {
+            type: String
+            number: String
+        }
+
+        VALUE_OBJECT(Purchases) #Bisque {
+            purchases: list[SaleIdentifier]
+        }
+
+
+        VALUE_OBJECT(ServiceRequests) #Bisque {
+            serviceRequests: list[ServiceRequestIdentifier]
+        }
+
+        AGGREGATE(CustomerContact) #lightpink {
+            date: DateTime
+            summary: String
+            customerInitiated:Boolean
+            contactStatus: String
+        }
+
+        VALUE_OBJECT(CustomerContactIdentifier) #Bisque {
+            customerContactId: UUID
+        }
+
+        Customer -u-> CustomerIdentifier
+        Customer o-- "0..*" CustomerPhoneNumber
+        Customer o--> "1" CustomerAddress
+        Customer o-- "0..*" CustomerContact
+        Customer o-- Purchases
+
+
+        Customer o-- ServiceRequests
+
+
+        CustomerContact --> CustomerContactIdentifier
+        CustomerContact o-> VehicleIdentifier
+        CustomerContact o-> CustomerIdentifier
+        CustomerContact o-> EmployeeIdentifier
+        note on link
+           where employee.position.title == CUSTOMER-SERVICE
+        end note
+
+    }
+
+Package "After Sales Service Sub-Domain" <<Rectangle>> #LightSalmon {
+
+      AGGREGATE_ROOT(ServiceRequest) #lightblue {
+        start: DateTime
+        end: DateTime
+        priority: String
+        isWarrantyRepair: Boolean
+        status: String
+      }
+
+      VALUE_OBJECT(ServiceRequestIdentifier) #Bisque {
+        requestId: UUID
+      }
+
+      VALUE_OBJECT(PartReplaced) #Bisque {
+        description: String
+        quantity: Integer
+        manufacturer: String
+        cost: Price
+      }
+
+      VALUE_OBJECT(TotalCost) #Bisque {
+        currency: String
+        value: Decimal
+      }
+
+      ServiceRequest --> ServiceRequestIdentifier
+      ServiceRequest o--> "0..*" PartReplaced
+      ServiceRequest o--> "1" TotalCost
+      ServiceRequest o--> "1" EmployeeIdentifier
+      note on link
+          where employee.position.title == MECHANIC
+      end note
+      ServiceRequest o--> CustomerIdentifier
+      ServiceRequest o--> "1" VehicleIdentifier
+
+      ServiceRequests *-- "0..*" ServiceRequestIdentifier
+      note on link
+          where customerId == serviceRequest.customerId
+      end note
+
+   }
+
+   Package "Sales and Marketing Sub-Domain" <<Rectangle>> #DFBDF4 {
+
+       note "Invariant: [When a vehicle is purchased i.e. purchase.status is set to COMPLETED, its status in the inventory must be set to SOLD]" as inventoryInvariant1
+
+               AGGREGATE_ROOT_ENTITY(Sale) #lightPink {
+                   date: DateTime
+                   status: String
+               }
+
+
+               VALUE_OBJECT(SaleIdentifier) #Bisque{
+                   saleId: UUID
+               }
+
+               VALUE_OBJECT(FinancingAgreement) #Bisque{
+                   numMonths: Integer
+                   monthlyPayment: Price
+                   downPayment: Price
+               }
+
+               VALUE_OBJECT(Price) #Bisque{
+                   value: Decimal
+                   currency: Currency
+               }
+
+               VALUE_OBJECT(Warranty) #Bisque {
+                    endDate: DateTime
+                    terms: String
+               }
+
+               Sale --> SaleIdentifier
+               Sale o-- "1" Price
+               Sale o-- "1" FinancingAgreement
+
+               Sale -u-> EmployeeIdentifier
+               note on link
+                  where employee.position.title == SALES
+               end note
+               Sale -u-> CustomerIdentifier
+               Sale -u-> VehicleIdentifier
+               Sale o--> Warranty
+
+              Purchases *-- "0..*" SaleIdentifier
+              note on link
+                where customerId == sale.customerId
+              end note
+           }
+
+  Package "Finance Sub-Domain" <<Rectangle>> #LightGray {
+  }
+
+
+}
+
+@enduml
