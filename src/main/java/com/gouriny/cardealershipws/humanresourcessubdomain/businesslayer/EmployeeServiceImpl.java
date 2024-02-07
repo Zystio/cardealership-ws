@@ -1,20 +1,18 @@
 package com.gouriny.cardealershipws.humanresourcessubdomain.businesslayer;
 
-import com.gouriny.cardealershipws.humanresourcessubdomain.datalayer.department.Department;
-import com.gouriny.cardealershipws.humanresourcessubdomain.datalayer.department.DepartmentIdentifier;
 import com.gouriny.cardealershipws.humanresourcessubdomain.datalayer.department.DepartmentRepository;
-import com.gouriny.cardealershipws.humanresourcessubdomain.datalayer.employee.Address;
 import com.gouriny.cardealershipws.humanresourcessubdomain.datalayer.employee.Employee;
 import com.gouriny.cardealershipws.humanresourcessubdomain.datalayer.employee.EmployeeIdentifier;
 import com.gouriny.cardealershipws.humanresourcessubdomain.datalayer.employee.EmployeeRepository;
 import com.gouriny.cardealershipws.humanresourcessubdomain.presentationlayer.EmployeeRequestModel;
 import com.gouriny.cardealershipws.humanresourcessubdomain.presentationlayer.EmployeeResponseModel;
-import com.gouriny.cardealershipws.humanresourcessubdomain.utils.exceptions.NotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -31,63 +29,28 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public List<EmployeeResponseModel> getAllEmployees() {
+    public List<EmployeeResponseModel> getEmployees() {
+        List<Employee> employees = employeeRepository.findAll();
+        List<EmployeeResponseModel> employeeResponseModels = new ArrayList<>();
+        for (Employee employee : employees) {
+            EmployeeResponseModel EmployeeResponseModel = new EmployeeResponseModel();
+            BeanUtils.copyProperties(employee, EmployeeResponseModel);
+            EmployeeResponseModel.setEmployeeId(employee.getEmployeeIdentifier().getEmployeeId());
+            employeeResponseModels.add(EmployeeResponseModel);
+        }
+        return employeeResponseModels;
 
-        List<Employee> employeeList = employeeRepository.findAll();
-        List<EmployeeResponseModel> responseList = new ArrayList<>();
-
-        employeeList.forEach(employee -> {
-
-            EmployeeResponseModel dto = new EmployeeResponseModel();
-            Department department = departmentRepository.findDepartmentByDepartmentIdentifier_DepartmentId(employee.getDepartmentIdentifier().getDepartmentId());
-
-            BeanUtils.copyProperties(employee, dto);
-            BeanUtils.copyProperties(department, dto);
-
-            dto.setEmployeeId(employee.getEmployeeIdentifier().getEmployeeId());
-            dto.setStreetAddress(employee.getAddress().getStreetAddress());
-            dto.setCity(employee.getAddress().getCity());
-            dto.setProvince(employee.getAddress().getProvince());
-            dto.setCountry(employee.getAddress().getCountry());
-            dto.setPostalCode(employee.getAddress().getPostalCode());
-
-            dto.setDepartmentId(department.getDepartmentIdentifier().getDepartmentId());
-            dto.setDepartmentName(department.getName());
-            dto.setHeadCount(department.getHeadCount());
-
-            dto.setTitle(employee.getPositionTitle());
-
-
-            responseList.add(dto);
-        });
-
-        return responseList;
     }
 
     @Override
-    public EmployeeResponseModel getEmployeeById(String employeeId) {
-        Employee foundEmployee = employeeRepository.findEmployeeByEmployeeIdentifier_EmployeeId(employeeId);
-        if (foundEmployee == null) {
-            throw new NotFoundException("Unknown employee" + employeeId);
+    public EmployeeResponseModel getEmployeeById(UUID employeeId) {
+        Employee employee = employeeRepository.findEmployeeByEmployeeIdentifier_EmployeeId(employeeId.toString());
+        if (employee == null) {
+            throw new EntityNotFoundException("No employee found with ID: " + employeeId);
         }
-
         EmployeeResponseModel employeeResponseModel = new EmployeeResponseModel();
-        BeanUtils.copyProperties(foundEmployee, employeeResponseModel);
-        BeanUtils.copyProperties(departmentRepository.findDepartmentByDepartmentIdentifier_DepartmentId(foundEmployee.getDepartmentIdentifier().getDepartmentId()), employeeResponseModel);
-
-        employeeResponseModel.setEmployeeId(foundEmployee.getEmployeeIdentifier().getEmployeeId());
-        employeeResponseModel.setDepartmentId(foundEmployee.getDepartmentIdentifier().getDepartmentId());
-
-        employeeResponseModel.setStreetAddress(foundEmployee.getAddress().getStreetAddress());
-        employeeResponseModel.setCity(foundEmployee.getAddress().getCity());
-        employeeResponseModel.setProvince(foundEmployee.getAddress().getProvince());
-        employeeResponseModel.setCountry(foundEmployee.getAddress().getCountry());
-        employeeResponseModel.setPostalCode(foundEmployee.getAddress().getPostalCode());
-
-        employeeResponseModel.setTitle(foundEmployee.getPositionTitle());
-
-        employeeResponseModel.setDepartmentName(departmentRepository.findDepartmentByDepartmentIdentifier_DepartmentId(foundEmployee.getDepartmentIdentifier().getDepartmentId()).getName());
-
+        BeanUtils.copyProperties(employee, employeeResponseModel);
+        employeeResponseModel.setEmployeeId(employee.getEmployeeIdentifier().getEmployeeId());
         return employeeResponseModel;
     }
 
@@ -96,20 +59,42 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeRequestModel, employee);
         employee.setEmployeeIdentifier(new EmployeeIdentifier());
-        employee.setDepartmentIdentifier(new DepartmentIdentifier());
-
-        Address address = new Address(employeeRequestModel.getStreetAddress(), employeeRequestModel.getCity(), employeeRequestModel.getProvince(), employeeRequestModel.getCountry(), employeeRequestModel.getPostalCode());
-        employee.setAddress(address);
-
-
         Employee savedEmployee = employeeRepository.save(employee);
-
         EmployeeResponseModel employeeResponseModel = new EmployeeResponseModel();
         BeanUtils.copyProperties(savedEmployee, employeeResponseModel);
         employeeResponseModel.setEmployeeId(savedEmployee.getEmployeeIdentifier().getEmployeeId());
-
         return employeeResponseModel;
     }
+
+    @Override
+    public EmployeeResponseModel updateEmployee(EmployeeRequestModel employeeRequestModel, UUID employeeId) {
+        Employee existingEmployee = employeeRepository.findEmployeeByEmployeeIdentifier_EmployeeId(employeeId.toString());
+        if (existingEmployee == null) {
+            throw new EntityNotFoundException("No employee found with ID: " + employeeId);
+        }
+        BeanUtils.copyProperties(employeeRequestModel, existingEmployee);
+        Employee updatedEmployee = employeeRepository.save(existingEmployee);
+        EmployeeResponseModel employeeResponseModel = new EmployeeResponseModel();
+        BeanUtils.copyProperties(updatedEmployee, employeeResponseModel);
+        employeeResponseModel.setEmployeeId(updatedEmployee.getEmployeeIdentifier().getEmployeeId());
+        return employeeResponseModel;
+    }
+
+
+    @Override
+    public void deleteEmployee(UUID employeeId) {
+        Employee existingEmployee = employeeRepository.findEmployeeByEmployeeIdentifier_EmployeeId(employeeId.toString());
+        if (existingEmployee == null)
+            throw new EntityNotFoundException("No employee found with ID: " + employeeId);
+        employeeRepository.delete(existingEmployee);
+    }
+//    @Override
+//    public void deleteClient(String clientId) {
+//        Client existingClient = clientRepository.findClientByClientIdentifier_ClientId(clientId);
+//        if(existingClient == null)
+//            return ; //later on throw exception
+//        clientRepository.delete(existingClient);
+//    }
 
 
 }

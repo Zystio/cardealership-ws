@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/v1/employees")
@@ -19,21 +20,30 @@ public class EmployeeController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<EmployeeResponseModel>> getAllEmployees() {
-        return ResponseEntity.ok().body(employeeService.getAllEmployees());
+    public ResponseEntity<List<EmployeeResponseModel>> getEmployees() {
+        return ResponseEntity.ok().body(employeeService.getEmployees());
     }
 
-    @GetMapping("{employeeId}")
-    public ResponseEntity<EmployeeResponseModel> getEmployeeById(@PathVariable String employeeId) {
+    @GetMapping("/{employeeId}")
+    public ResponseEntity<EmployeeResponseModel> getEmployeeById(@PathVariable UUID employeeId) {
         return ResponseEntity.ok().body(employeeService.getEmployeeById(employeeId));
     }
 
     @PostMapping()
     public ResponseEntity<EmployeeResponseModel> addEmployee(@RequestBody EmployeeRequestModel employeeRequestModel) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.addEmployee(employeeRequestModel));
+        EmployeeResponseModel employeeResponseModel = employeeService.addEmployee(employeeRequestModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(employeeResponseModel);
     }
-//    @PostMapping()
-//    public ResponseEntity<DepartmentResponseModel> addDepartment(@RequestBody DepartmentRequestModel departmentRequestModel){
-//        return ResponseEntity.status(HttpStatus.CREATED).body(departmentService.addDepartment(departmentRequestModel));
-//    }
+
+    @PutMapping("/{employeeId}")
+    public ResponseEntity<EmployeeResponseModel> updateEmployee(@RequestBody EmployeeRequestModel employeeRequestModel, @PathVariable UUID employeeId) {
+        EmployeeResponseModel employeeResponseModel = employeeService.updateEmployee(employeeRequestModel, employeeId);
+        return ResponseEntity.status(HttpStatus.OK).body(employeeResponseModel);
+    }
+
+    @DeleteMapping("/{employeeId}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable UUID employeeId) {
+        employeeService.deleteEmployee(employeeId);
+        return ResponseEntity.noContent().build();
+    }
 }

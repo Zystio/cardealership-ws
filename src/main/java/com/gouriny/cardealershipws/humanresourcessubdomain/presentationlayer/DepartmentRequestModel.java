@@ -9,13 +9,12 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Builder
 public class DepartmentRequestModel {
 
-    String name;
-    Integer headCount;
-    List<Position> positions;
+    private String name;
+    private Integer headCount;
+    private List<Position> positions;
 }

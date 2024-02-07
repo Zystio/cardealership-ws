@@ -4,6 +4,7 @@ import com.gouriny.cardealershipws.humanresourcessubdomain.presentationlayer.Dep
 import com.gouriny.cardealershipws.humanresourcessubdomain.presentationlayer.DepartmentResponseModel;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface DepartmentService {
 
@@ -13,5 +14,7 @@ public interface DepartmentService {
 
     DepartmentResponseModel addDepartment(DepartmentRequestModel departmentRequestModel);
 
-    DepartmentResponseModel updateDepartment(String departmentId, DepartmentRequestModel departmentRequestModel);
+    DepartmentResponseModel updateDepartment(DepartmentRequestModel departmentRequestModel, UUID departmentId);
+
+    void deleteDepartment(UUID departmentId);
 }

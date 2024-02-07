@@ -3,7 +3,6 @@ package com.gouriny.cardealershipws.humanresourcessubdomain.businesslayer;
 import com.gouriny.cardealershipws.humanresourcessubdomain.datalayer.department.Department;
 import com.gouriny.cardealershipws.humanresourcessubdomain.datalayer.department.DepartmentIdentifier;
 import com.gouriny.cardealershipws.humanresourcessubdomain.datalayer.department.DepartmentRepository;
-import com.gouriny.cardealershipws.humanresourcessubdomain.datalayer.department.DepartmentResponseMapper;
 import com.gouriny.cardealershipws.humanresourcessubdomain.presentationlayer.DepartmentRequestModel;
 import com.gouriny.cardealershipws.humanresourcessubdomain.presentationlayer.DepartmentResponseModel;
 import com.gouriny.cardealershipws.humanresourcessubdomain.utils.exceptions.NotFoundException;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
@@ -19,7 +19,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     private DepartmentRepository departmentRepository;
 
 
-    public DepartmentServiceImpl(DepartmentRepository departmentRepository, DepartmentResponseMapper departmentResponseMapper) {
+    public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
         this.departmentRepository = departmentRepository;
     }
 
@@ -69,11 +69,27 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public DepartmentResponseModel updateDepartment(String departmentId, DepartmentRequestModel departmentRequestModel) {
+    public DepartmentResponseModel updateDepartment(DepartmentRequestModel departmentRequestModel, UUID departmentId) {
 
-        Department existingDepartment = departmentRepository.findDepartmentByDepartmentIdentifier_DepartmentId(departmentId);
-
-
-        return null;
+        Department existingDepartment = departmentRepository.findDepartmentByDepartmentIdentifier_DepartmentId(departmentId.toString());
+        if (existingDepartment == null) {
+            throw new NotFoundException("No department found with ID: " + departmentId);
+        }
+        BeanUtils.copyProperties(departmentRequestModel, existingDepartment);
+        Department updatedDepartment = departmentRepository.save(existingDepartment);
+        DepartmentResponseModel departmentResponseModel = new DepartmentResponseModel();
+        BeanUtils.copyProperties(updatedDepartment, departmentResponseModel);
+        departmentResponseModel.setDepartmentId(updatedDepartment.getDepartmentIdentifier().getDepartmentId());
+        return departmentResponseModel;
     }
+
+    @Override
+    public void deleteDepartment(UUID departmentId) {
+        Department existingDepartment = departmentRepository.findDepartmentByDepartmentIdentifier_DepartmentId(departmentId.toString());
+        if (existingDepartment == null) {
+            throw new NotFoundException("No department found with ID: " + departmentId);
+        }
+        departmentRepository.delete(existingDepartment);
+    }
+
 }
