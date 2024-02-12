@@ -69,7 +69,7 @@ public class VehicleInventoryServiceImpl implements VehicleInventoryService {
     public List<VehicleResponseModel> getVehiclesInInventoryByField(String inventoryId, Map<String, String> queryParams) {
 
         if (!inventoryRepository.existsByInventoryIdentifier_InventoryId(inventoryId)) {
-            return null; // throw an excepiton
+            return null; // throw an exception
         }
 
         //extract the query params
@@ -84,7 +84,7 @@ public class VehicleInventoryServiceImpl implements VehicleInventoryService {
 
         Map<String, UsageType> usageTypeMap = new HashMap<String, UsageType>();
         usageTypeMap.put("new", UsageType.NEW);
-        usageTypeMap.put("new", UsageType.USED);
+        usageTypeMap.put("used", UsageType.USED);
 
 
         if (status != null && usageType != null) {

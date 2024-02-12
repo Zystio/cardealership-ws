@@ -8,8 +8,8 @@ import com.gouriny.cardealershipws.humanresourcessubdomain.datamapperlayer.emplo
 import com.gouriny.cardealershipws.humanresourcessubdomain.datamapperlayer.employee.EmployeeResponseMapper;
 import com.gouriny.cardealershipws.humanresourcessubdomain.presentationlayer.EmployeeRequestModel;
 import com.gouriny.cardealershipws.humanresourcessubdomain.presentationlayer.EmployeeResponseModel;
-import com.gouriny.cardealershipws.humanresourcessubdomain.utils.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
+import utils.exceptions.NotFoundException;
 
 import java.util.List;
 import java.util.UUID;
