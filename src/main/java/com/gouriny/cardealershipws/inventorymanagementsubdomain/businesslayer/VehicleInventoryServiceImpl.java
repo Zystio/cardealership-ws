@@ -69,7 +69,7 @@ public class VehicleInventoryServiceImpl implements VehicleInventoryService {
     public List<VehicleResponseModel> getVehiclesInInventoryByField(String inventoryId, Map<String, String> queryParams) {
 
         if (!inventoryRepository.existsByInventoryIdentifier_InventoryId(inventoryId)) {
-            return null; // throw an exception
+            throw new InvalidInputException("Invalid inventoryId provided: " + inventoryId);
         }
 
         //extract the query params
@@ -81,7 +81,7 @@ public class VehicleInventoryServiceImpl implements VehicleInventoryService {
         statusMap.put("sale_pending", Status.SALE_PENDING);
         statusMap.put("sold", Status.SOLD);
 
-
+        //convert to enums
         Map<String, UsageType> usageTypeMap = new HashMap<String, UsageType>();
         usageTypeMap.put("new", UsageType.NEW);
         usageTypeMap.put("used", UsageType.USED);
