@@ -32,7 +32,7 @@ public class InventoryController {
         return ResponseEntity.ok().body(vehicleInventoryService.getVehiclesInInventoryByField(inventoryId, queryParams));
     }
 
-    //    @GetMapping("{vin}")
+//    @GetMapping("/{vin}")
 //    public ResponseEntity<VehicleResponseModel> getVehicleInInventoryByVin(@PathVariable String inventoryId, @PathVariable String vin) {
 //        return ResponseEntity.ok().body(vehicleInventoryService.getVehicleInInventoryByVin(inventoryId, vin));
 //    }

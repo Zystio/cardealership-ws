@@ -65,6 +65,17 @@ public class VehicleInventoryServiceImpl implements VehicleInventoryService {
 
     }
 
+//    public VehicleResponseModel getVehicleInInventoryByVin(String inventoryId, String vin) {
+//
+//        if (!inventoryRepository.existsByInventoryIdentifier_InventoryId(inventoryId)) {
+//            return null; // throw an exception
+//        }
+//
+//        Vehicle foundVehicle = vehicleRepository.findByInventoryIdentifier_InventoryIdAndVehicleIdentifier_Vin(inventoryId, vin);
+//        return vehicleResponseMapper.entityToResponseModel(foundVehicle);
+//
+//    }
+
     @Override
     public List<VehicleResponseModel> getVehiclesInInventoryByField(String inventoryId, Map<String, String> queryParams) {
 

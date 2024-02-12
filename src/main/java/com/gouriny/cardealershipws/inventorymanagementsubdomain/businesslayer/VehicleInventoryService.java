@@ -11,6 +11,8 @@ public interface VehicleInventoryService {
 
     VehicleInventoryResponseModel getInventoryById(String inventoryId);
 
+//    VehicleResponseModel getVehicleInInventoryByVin(String inventoryId, String vin);
+
     List<VehicleResponseModel> getVehiclesInInventoryByField(String inventoryId,
                                                              Map<String, String> queryParams);
 

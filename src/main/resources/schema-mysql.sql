@@ -1,7 +1,7 @@
 USE
 `cardealership-db`;
 
-create table if not exists department_positions
+CREATE TABLE IF NOT EXISTS department_positions
 (
     department_id
     INTEGER,
@@ -16,7 +16,7 @@ create table if not exists department_positions
 )
     );
 
-create table if not exists departments
+CREATE TABLE IF NOT EXISTS departments
 (
     id
     INTEGER
@@ -37,7 +37,7 @@ create table if not exists departments
     head_count INTEGER
     );
 
-create table if not exists employee_phonenumbers
+CREATE TABLE IF NOT EXISTS employee_phonenumbers
 (
     employee_id
     INTEGER,
@@ -52,7 +52,7 @@ create table if not exists employee_phonenumbers
 )
     );
 
-create table if not exists employees
+CREATE TABLE IF NOT EXISTS employees
 (
     id
     INTEGER
@@ -118,7 +118,7 @@ create table if not exists employees
 )
     );
 
-create table if not exists inventories
+CREATE TABLE IF NOT EXISTS inventories
 (
     id
     INTEGER
@@ -138,7 +138,7 @@ create table if not exists inventories
 )
     );
 
-create table if not exists vehicle_options
+CREATE TABLE IF NOT EXISTS vehicle_options
 (
     vehicle_id
     INTEGER,
@@ -158,7 +158,7 @@ create table if not exists vehicle_options
 )
     );
 
-create table if not exists vehicles
+CREATE TABLE IF NOT EXISTS vehicles
 (
     id
     INTEGER
