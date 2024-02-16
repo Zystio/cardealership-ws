@@ -1,21 +1,14 @@
 package com.gouriny.cardealershipws.inventorymanagementsubdomain.presentationlayer;
 
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
+
+@Value
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class InventoryRequestModel {
-
     String type;
-
-    public InventoryRequestModel() {
-    }
-
-    public InventoryRequestModel(String type) {
-        this.type = type;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 }

@@ -1,11 +1,13 @@
 package com.gouriny.cardealershipws.inventorymanagementsubdomain.businesslayer;
 
+import com.gouriny.cardealershipws.common.VehicleIdentifier;
 import com.gouriny.cardealershipws.inventorymanagementsubdomain.datalayer.*;
 import com.gouriny.cardealershipws.inventorymanagementsubdomain.datamapperlayer.*;
 import com.gouriny.cardealershipws.inventorymanagementsubdomain.presentationlayer.*;
 import com.gouriny.cardealershipws.inventorymanagementsubdomain.utils.exceptions.DuplicateVinException;
 import com.gouriny.cardealershipws.inventorymanagementsubdomain.utils.exceptions.InvalidInputException;
 import com.gouriny.cardealershipws.inventorymanagementsubdomain.utils.exceptions.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class VehicleInventoryServiceImpl implements VehicleInventoryService {
 
@@ -43,7 +46,7 @@ public class VehicleInventoryServiceImpl implements VehicleInventoryService {
 
     @Override
     public List<InventoryResponseModel> getInventories() {
-
+        log.debug("Getting all inventories from the database.");
         return inventoryResponseMapper.entityListToResponseModelList(inventoryRepository.findAll());
     }
 
@@ -58,7 +61,9 @@ public class VehicleInventoryServiceImpl implements VehicleInventoryService {
 
         List<Vehicle> vehicles = vehicleRepository.findAllByInventoryIdentifier_InventoryIdAndStatusEquals(inventoryId, Status.AVAILABLE);
 
+
         List<VehicleResponseModel> vehicleResponseModels = vehicleResponseMapper.entityListToResponseModelList(vehicles);
+        log.debug("First Link is: " + vehicleResponseModels.get(0).getLinks());
 
         return vehicleInventoryResponseMapper.entitiesToResponseModel(inventory, vehicleResponseModels);
 

@@ -15,4 +15,6 @@ public interface VehicleInventoryResponseMapper {
     @Mapping(expression = "java(vehicles)", target = "availableVehicles")
     VehicleInventoryResponseModel entitiesToResponseModel(Inventory inventory, List<VehicleResponseModel> vehicles);
 
+
+
 }

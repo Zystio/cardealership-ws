@@ -1,9 +1,9 @@
 package com.gouriny.cardealershipws.inventorymanagementsubdomain.datamapperlayer;
 
-import com.gouriny.cardealershipws.inventorymanagementsubdomain.datalayer.InventoryIdentifier;
+import com.gouriny.cardealershipws.common.InventoryIdentifier;
 import com.gouriny.cardealershipws.inventorymanagementsubdomain.datalayer.Price;
 import com.gouriny.cardealershipws.inventorymanagementsubdomain.datalayer.Vehicle;
-import com.gouriny.cardealershipws.inventorymanagementsubdomain.datalayer.VehicleIdentifier;
+import com.gouriny.cardealershipws.common.VehicleIdentifier;
 import com.gouriny.cardealershipws.inventorymanagementsubdomain.presentationlayer.VehicleRequestModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

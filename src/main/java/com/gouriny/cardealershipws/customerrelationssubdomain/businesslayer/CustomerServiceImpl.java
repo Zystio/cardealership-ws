@@ -3,7 +3,7 @@ package com.gouriny.cardealershipws.customerrelationssubdomain.businesslayer;
 
 import com.gouriny.cardealershipws.customerrelationssubdomain.datalayer.Address;
 import com.gouriny.cardealershipws.customerrelationssubdomain.datalayer.Customer;
-import com.gouriny.cardealershipws.customerrelationssubdomain.datalayer.CustomerIdentifier;
+import com.gouriny.cardealershipws.common.CustomerIdentifier;
 import com.gouriny.cardealershipws.customerrelationssubdomain.datalayer.CustomerRepository;
 import com.gouriny.cardealershipws.customerrelationssubdomain.datamapperlayer.CustomerRequestMapper;
 import com.gouriny.cardealershipws.customerrelationssubdomain.datamapperlayer.CustomerResponseMapper;

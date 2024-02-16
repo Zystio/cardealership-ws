@@ -1,6 +1,7 @@
 package com.gouriny.cardealershipws.customerrelationssubdomain.datalayer;
 
 
+import com.gouriny.cardealershipws.common.CustomerIdentifier;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

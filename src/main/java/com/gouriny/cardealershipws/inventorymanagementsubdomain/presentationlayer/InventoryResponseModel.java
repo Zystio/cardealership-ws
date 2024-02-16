@@ -1,16 +1,15 @@
 package com.gouriny.cardealershipws.inventorymanagementsubdomain.presentationlayer;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Value;
+import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 
-@Value
-@Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class InventoryResponseModel {
+@Data
+//@Builder
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
+public class InventoryResponseModel extends RepresentationModel<InventoryResponseModel> {
 
-    private String inventoryId; //public id
-    private String type;
+    String inventoryId; //public id
+    String type;
 }

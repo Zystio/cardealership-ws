@@ -3,7 +3,7 @@ package com.gouriny.cardealershipws.customerrelationssubdomain.datamapperlayer;
 
 import com.gouriny.cardealershipws.customerrelationssubdomain.datalayer.Address;
 import com.gouriny.cardealershipws.customerrelationssubdomain.datalayer.Customer;
-import com.gouriny.cardealershipws.customerrelationssubdomain.datalayer.CustomerIdentifier;
+import com.gouriny.cardealershipws.common.CustomerIdentifier;
 import com.gouriny.cardealershipws.customerrelationssubdomain.presentationlayer.CustomerRequestModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

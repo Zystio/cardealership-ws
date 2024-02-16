@@ -8,13 +8,14 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.List;
 
 @Value
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class VehicleResponseModel {
+public class VehicleResponseModel extends RepresentationModel<VehicleResponseModel> {
 
     private final String vehicleId;
     private final String inventoryId;

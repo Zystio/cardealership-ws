@@ -217,3 +217,22 @@ CREATE TABLE IF NOT EXISTS vehicles
     2
 )
     );
+
+create table if not exists sales (
+                                     id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                     sale_id VARCHAR(36) UNIQUE,
+    inventory_id VARCHAR(36),
+    vin VARCHAR(17),
+    customer_id VARCHAR(36),
+    employee_id VARCHAR(36),
+    amount DECIMAL(19,2),
+    currency VARCHAR(3),
+    sale_status VARCHAR(50),
+    number_of_monthly_payments INTEGER,
+    monthly_payment_amount DECIMAL(19,2),
+    down_payment_amount DECIMAL(19,2),
+    payment_currency VARCHAR(3),
+    sale_offer_date DATE,
+    warranty_end_date DATE,
+    warranty_terms VARCHAR(250)
+    );

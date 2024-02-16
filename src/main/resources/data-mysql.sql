@@ -85,3 +85,5 @@ insert into vehicle_options (vehicle_id, name, description, cost)
 values (1, 'Executive Package',
         '-inc: Active Cruise Control w/Stop & Go, Glass & Wood Controls, Soft-Close Automatic Doors, Traffic Jam Assistant, Active Lane',
         9638.32);
+
+insert into sales (sale_id, inventory_id, vin, customer_id, employee_id, amount, currency, sale_status, number_of_monthly_payments, monthly_payment_amount, down_payment_amount, payment_currency, sale_offer_date, warranty_end_date, warranty_terms)values('05c8ab76-4f75-45c1-b6e2-aa8e914ea08f', 'd846a5a7-2e1c-4c79-809c-4f3f471e826d', 'JN8AS5MTXDW375966', 'c3540a89-cb47-4c96-888e-ff96708db4d8', 'e5913a79-9b1e-4516-9ffd-06578e7af261', 75000.00, 'CAD', 'PURCHASE_OFFER', 36, 1805.56, 10000.00, 'CAD', '2024-2-13', '2027-2-13', 'Basic Warranty: The basic warranty covers the vehicle against defects in materials or workmanship for a specific period, typically around 3 to 5 years.' );

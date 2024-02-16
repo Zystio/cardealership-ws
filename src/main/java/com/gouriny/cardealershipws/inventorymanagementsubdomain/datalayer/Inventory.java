@@ -1,5 +1,6 @@
 package com.gouriny.cardealershipws.inventorymanagementsubdomain.datalayer;
 
+import com.gouriny.cardealershipws.common.InventoryIdentifier;
 import jakarta.persistence.*;
 import lombok.Data;
 
