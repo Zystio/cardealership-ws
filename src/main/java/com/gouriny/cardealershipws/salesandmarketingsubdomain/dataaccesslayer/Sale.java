@@ -66,4 +66,7 @@ public class Sale {
         this.warranty = warranty;
     }
 
+    public Sale() {
+        
+    }
 }
